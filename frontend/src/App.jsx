@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
@@ -12,7 +12,7 @@ import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { authUser, checkAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -31,14 +31,16 @@ const App = () => {
   return (
     <React.Fragment>
 
+      {/* Navigation Bar */}
       <Navbar />
 
+      {/* Routes */}
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={authUser ? (<HomePage />) : (<Navigate to="/login" />)} />
+        <Route path="/signup" element={!authUser ? (<SignUpPage />) : (<Navigate to="/" />)} />
+        <Route path="/login" element={!authUser ? (<LoginPage />) : (<Navigate to="/" />)} />
         <Route path="/setting" element={<SettingsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile" element={authUser ? <ProfilePage /> : (<Navigate to="/login" />)} />
       </Routes>
 
     </React.Fragment>
