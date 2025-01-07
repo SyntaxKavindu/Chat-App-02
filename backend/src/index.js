@@ -3,13 +3,13 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
+import { io, app, server } from "./lib/socket.js";
 
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import { connectDB } from './lib/db.js';
 
 dotenv.config();
-const app = express();
 
 // Parse incoming requests with JSON payloads
 app.use(express.json());
@@ -32,7 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 // Start the server and connect to the database
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on port http://localhost:${PORT}`);
     // Connect to MongoDB
     connectDB();
