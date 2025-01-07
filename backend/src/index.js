@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
+import path from "path";
 import { io, app, server } from "./lib/socket.js";
 
 import authRoutes from './routes/auth.route.js';
@@ -27,9 +28,20 @@ app.use(cors({
 // Define the port to listen on
 const PORT = process.env.PORT || 5001;
 
+const __dirname = path.resolve();
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+
+if (process.env.NODE_ENV === 'production') {
+    // Serve static files from the build folder
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    // Handle SPA routes
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
+    });
+}
 
 // Start the server and connect to the database
 server.listen(PORT, () => {
