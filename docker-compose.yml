@@ -1,0 +1,25 @@
+services:
+  backend:
+    image: kavindusyntax/chat-app-02:1.0
+    container_name: chat_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      - ENV JWT_SECRET=
+      - ENV CLOUDINARY_CLOUD_NAME=
+      - ENV CLOUDINARY_API_KEY=
+      - ENV CLOUDINARY_API_SECRET=
+      - MONGODB_URI=mongodb://mongodb:27017/chat_app
+
+  mongodb:
+    image: mongodb/mongodb-community-server
+    container_name: mongodb_chat_app_container
+    volumes:
+      - mongodb_chat:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodb_chat:
